@@ -82,44 +82,39 @@ export function CheckoutForm({ co2, cred, totalPrice, onStartLoading }: Checkout
     }
   }
 
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true)
-    setErrorMessage(null)
-    onStartLoading()
+ const onSubmit = async (data: FormData) => {
+  setIsSubmitting(true);
+  setErrorMessage(null);
+  onStartLoading();
 
-    try {
-      const cleanedData = {
-        ...data,
-        telefone: data.telefone.replace(/\D/g, ""),
-        cpf: data.cpf.replace(/\D/g, ""),
-        numeroCartao: data.numeroCartao.replace(/\D/g, ""),
-        validade: data.validade.replace(/\D/g, ""),
-      }
+  try {
+    const cleanedData = {
+      ...data,
+      telefone: data.telefone.replace(/\D/g, ""),
+      cpf: data.cpf.replace(/\D/g, ""),
+      numeroCartao: data.numeroCartao.replace(/\D/g, ""),
+      validade: data.validade.replace(/\D/g, ""),
+    };
 
-      const paymentData = transformToPaymentData(cleanedData)
-      console.log(paymentData);
-      const result = await processPayment(paymentData);
-      
+    const paymentData = transformToPaymentData(cleanedData);
+    const result = await processPayment(paymentData);
 
-      if (result.ok) {
-        const responseData = await result.json()
-        if (responseData.status === 'success') {
-          window.location.href = "/success"
-        } else {
-          window.location.href = "/error"
-          setErrorMessage(responseData.message || "Erro ao processar pagamento")
-        }
-      } else {
-        const errorData = await result.json().catch(() => ({}))
-        setErrorMessage(errorData.message || "Erro na requisição")
-      }
-    } catch (error) {
-      console.error("Erro no processamento:", error)
-      setErrorMessage("Ocorreu um erro inesperado. Tente novamente.")
-    } finally {
-      setIsSubmitting(false)
+    const responseData = await result.json();
+
+    if (result.ok && responseData.status === "success") {
+      window.location.href = "/success";
+    } else {
+      console.error("Erro na resposta da API:", responseData);
+      window.location.href = "/error";
     }
+
+  } catch (error) {
+    console.error("Erro inesperado:", error);
+    window.location.href = "/error";
+  } finally {
+    setIsSubmitting(false);
   }
+};
 
   return (
     <Form {...form}>
