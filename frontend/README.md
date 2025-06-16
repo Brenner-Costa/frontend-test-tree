@@ -16,4 +16,4 @@ Um sistema moderno de checkout para compensação de créditos de carbono, desen
 - **Framework**: Next.js 14 (App Router)
 - **Linguagem**: TypeScript
 - **Estilização**: Tailwind CSS + ShadCN/ui
-- **Deploy**: Vercel
+- **Deploy**: https://frontend-test-tree-lac.vercel.app/
